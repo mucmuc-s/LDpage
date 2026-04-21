@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>♥ 我们的故事</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rose:#c8637a;--deep:#a34e64;--blush:#f2d5db;--cream:#fdf6f0;
+  --mauve:#8b5e6d;--gold:#c9a96e;--ink:#3a2a35;--mist:#f8edf3;
+  --sw:300px;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Noto Serif SC',serif;background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden}
+
+/* ── BG ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 55% at 10% 90%,rgba(242,213,219,.5) 0%,transparent 55%),
+    radial-gradient(ellipse 55% 65% at 90% 5%,rgba(201,169,110,.13) 0%,transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 50%,#fdf6f0 0%,#f8edf3 100%);
+}
+canvas#c{position:fixed;inset:0;pointer-events:none;z-index:1}
+
+/* ══════════ LOGIN ══════════ */
+#login-page{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+}
+.lcard{
+  position:relative;z-index:2;
+  width:400px;padding:52px 48px 44px;
+  background:rgba(253,246,240,.88);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(201,169,110,.35);
+  border-radius:3px;
+  box-shadow:0 0 0 8px rgba(201,169,110,.06),0 28px 72px rgba(58,42,53,.14);
+  animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.deco{display:flex;align-items:center;gap:14px;margin-bottom:32px}
+.dline{flex:1;height:1px}
+.dline.l{background:linear-gradient(to right,transparent,var(--gold))}
+.dline.r{background:linear-gradient(to left,transparent,var(--gold))}
+.dheart{color:var(--rose);font-size:17px;animation:hpulse 2s ease-in-out infinite}
+@keyframes hpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.ltitle{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:6px}
+.lsub{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;font-weight:300;color:var(--ink);text-align:center;margin-bottom:36px}
+.lfield{margin-bottom:18px}
+.lfield label{display:block;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--mauve);margin-bottom:7px;font-family:'Cormorant Garamond',serif}
+.lfield input{
+  width:100%;padding:11px 15px;
+  background:rgba(255,255,255,.75);border:1px solid rgba(201,169,110,.4);border-radius:2px;
+  font-size:15px;font-family:'Noto Serif SC',serif;color:var(--ink);outline:none;
+  transition:border-color .22s,box-shadow .22s;
+}
+.lfield input:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(200,99,122,.1)}
+.lerr{font-size:12px;color:var(--rose);text-align:center;margin:-4px 0 14px;min-height:18px}
+.lbtn{
+  width:100%;padding:13px;background:linear-gradient(135deg,var(--rose),var(--mauve));
+  color:#fff;border:none;border-radius:2px;font-size:12px;letter-spacing:5px;
+  font-family:'Cormorant Garamond',serif;cursor:pointer;transition:opacity .2s,transform .15s;
+}
+.lbtn:hover{opacity:.87;transform:translateY(-1px)}
+.lhint{margin-top:18px;text-align:center;font-size:11px;color:rgba(139,94,109,.5);letter-spacing:.8px}
+
+/* ══════════ MAIN ══════════ */
+#main-page{display:none;min-height:100vh;position:relative;z-index:2}
+
+/* ── Topnav ── */
+.topnav{
+  position:sticky;top:0;z-index:80;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 36px;
+  background:rgba(253,246,240,.87);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(201,169,110,.22);
+}
+.nbrand{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;color:var(--rose)}
+.nright{display:flex;align-items:center;gap:18px}
+.ndot{width:7px;height:7px;border-radius:50%;background:var(--gold);opacity:0;transition:opacity .3s}
+.ndot.on{opacity:1;animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.nuser{font-size:12px;letter-spacing:1.5px;color:var(--mauve);font-family:'Cormorant Garamond',serif;text-transform:uppercase}
+.nout{font-size:11px;color:rgba(139,94,109,.55);text-decoration:none;letter-spacing:1px;padding:5px 12px;border:1px solid rgba(201,169,110,.3);border-radius:2px;transition:all .2s;font-family:'Cormorant Garamond',serif}
+.nout:hover{color:var(--rose);border-color:var(--rose)}
+
+/* ── Layout ── */
+.layout{display:flex;transition:padding-right .38s cubic-bezier(.4,0,.2,1)}
+.layout.sb-open{padding-right:var(--sw)}
+
+/* ── Main content ── */
+.main{flex:1;padding:48px 56px;max-width:880px}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.sec-line{flex:0 0 28px;height:1px;background:linear-gradient(to right,var(--gold),transparent)}
+.sec-lbl{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:3.5px;text-transform:uppercase;color:var(--gold)}
+
+/* Names */
+.names-sec{margin-bottom:50px;animation:fsl .65s .05s both}
+.names-row{display:flex;align-items:center;gap:18px;margin-bottom:6px}
+.nf{
+  flex:1;background:transparent;border:none;border-bottom:1.5px solid rgba(201,169,110,.4);
+  padding:7px 4px;font-family:'Cormorant Garamond',serif;font-size:36px;font-style:italic;
+  font-weight:300;color:var(--ink);outline:none;min-width:0;transition:border-color .22s;
+}
+.nf::placeholder{color:rgba(139,94,109,.3)}
+.nf:focus{border-color:var(--rose)}
+.nsep{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--rose);font-style:italic;flex-shrink:0}
+.nhint{font-size:11px;color:rgba(139,94,109,.4);letter-spacing:.8px;margin-left:4px}
+
+/* Story */
+.story-sec{margin-bottom:50px;animation:fsl .65s .12s both}
+.sta{
+  width:100%;min-height:156px;padding:18px 22px;
+  background:rgba(255,255,255,.55);border:1px solid rgba(201,169,110,.3);border-radius:2px;
+  font-family:'Noto Serif SC',serif;font-size:15px;line-height:2;color:var(--ink);
+  outline:none;resize:vertical;transition:border-color .22s,box-shadow .22s;
+}
+.sta::placeholder{color:rgba(139,94,109,.32)}
+.sta:focus{border-color:rgba(200,99,122,.45);box-shadow:0 0 0 4px rgba(200,99,122,.07)}
+
+/* Photos */
+.photo-sec{animation:fsl .65s .2s both}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:6px}
+.pcard{
+  aspect-ratio:1;border-radius:2px;overflow:hidden;position:relative;
+  background:rgba(255,255,255,.5);border:1px solid rgba(201,169,110,.22);
+  cursor:pointer;transition:transform .22s,box-shadow .22s;
+}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(58,42,53,.13)}
+.pcard img{width:100%;height:100%;object-fit:cover;display:block}
+.pdel{
+  position:absolute;top:7px;right:7px;width:27px;height:27px;
+  background:rgba(30,10,20,.62);border-radius:50%;border:none;
+  cursor:pointer;color:#fff;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .18s;
+}
+.pcard:hover .pdel{opacity:1}
+.pupbtn{
+  aspect-ratio:1;border:1.5px dashed rgba(201,169,110,.42);border-radius:2px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+  cursor:pointer;transition:border-color .22s,background .22s;background:rgba(255,255,255,.3);
+}
+.pupbtn:hover{border-color:var(--rose);background:rgba(200,99,122,.05)}
+.pupicon{font-size:30px;opacity:.45}
+.puptxt{font-size:11px;letter-spacing:1.5px;color:var(--mauve);opacity:.65;font-family:'Cormorant Garamond',serif;text-transform:uppercase}
+#finput{display:none}
+
+/* Lightbox */
+.lbox{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(22,8,16,.93);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+}
+.lbox.on{display:flex}
+.lbox img{max-width:88vw;max-height:88vh;object-fit:contain;border:1px solid rgba(201,169,110,.28);animation:zin .22s ease}
+@keyframes zin{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.lbx-close{position:absolute;top:26px;right:30px;color:rgba(255,255,255,.65);font-size:26px;cursor:pointer;background:none;border:none;transition:color .18s}
+.lbx-close:hover{color:#fff}
+
+@keyframes fsl{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══════════ SIDEBAR ══════════ */
+.sidebar{
+  position:fixed;right:0;top:58px;bottom:0;width:var(--sw);
+  background:rgba(248,237,243,.97);backdrop-filter:blur(20px);
+  border-left:1px solid rgba(201,169,110,.26);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .38s cubic-bezier(.4,0,.2,1);
+  z-index:70;box-shadow:-6px 0 36px rgba(58,42,53,.08);
+}
+.sidebar.on{transform:translateX(0)}
+.sb-inner{flex:1;overflow-y:auto;padding:26px 22px 40px;scrollbar-width:thin;scrollbar-color:rgba(200,99,122,.2) transparent}
+.sb-inner::-webkit-scrollbar{width:3px}
+.sb-inner::-webkit-scrollbar-thumb{background:rgba(200,99,122,.22);border-radius:3px}
+.sbtitle{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.cathead{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mauve);margin-bottom:10px;font-family:'Cormorant Garamond',serif;opacity:.8}
+.tagrow{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px}
+.tag{
+  padding:5px 13px;border:1px solid rgba(201,169,110,.32);border-radius:2px;
+  font-size:13px;color:var(--mauve);cursor:pointer;background:rgba(255,255,255,.5);
+  transition:all .18s;user-select:none;font-family:'Noto Serif SC',serif;
+}
+.tag:hover{border-color:var(--rose);color:var(--rose)}
+.tag.sel{background:rgba(200,99,122,.12);border-color:var(--rose);color:var(--rose)}
+.tag.sel::after{content:' ✓';font-size:11px}
+.sdiv{height:1px;background:linear-gradient(to right,transparent,rgba(201,169,110,.28),transparent);margin:4px 0 24px}
+.sb-pgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sb-ph{
+  aspect-ratio:1;border-radius:2px;overflow:hidden;
+  border:2px solid transparent;cursor:pointer;transition:border-color .18s,transform .18s;
+}
+.sb-ph:hover{transform:scale(1.04)}
+.sb-ph.sel{border-color:var(--rose)}
+.sb-ph img{width:100%;height:100%;object-fit:cover}
+.sb-empty{font-size:12px;color:rgba(139,94,109,.4);font-style:italic;text-align:center;padding:10px 0}
+
+/* Toggle tab */
+.sbtog{
+  position:fixed;top:50%;right:0;
+  transform:translateY(-50%);z-index:75;
+  transition:right .38s cubic-bezier(.4,0,.2,1);
+}
+.sbtog.shifted{right:var(--sw)}
+.togbtn{
+  width:34px;height:76px;
+  background:rgba(248,237,243,.96);
+  border:1px solid rgba(201,169,110,.33);border-right:none;
+  border-radius:8px 0 0 8px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  box-shadow:-3px 0 14px rgba(58,42,53,.07);transition:background .18s;
+}
+.togbtn:hover{background:#f2d5db}
+.togdot{width:4px;height:4px;border-radius:50%;background:var(--rose);transition:background .2s}
+.sidebar.on~.sbtog .togdot,.sbtog.shifted .togdot{background:var(--gold)}
+
+/* Save FAB */
+.sfab{
+  position:fixed;bottom:34px;right:26px;z-index:90;
+  width:50px;height:50px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rose),var(--mauve));
+  border:none;cursor:pointer;color:#fff;font-size:19px;
+  box-shadow:0 5px 22px rgba(200,99,122,.38);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .18s,box-shadow .18s,right .38s cubic-bezier(.4,0,.2,1);
+}
+.sfab:hover{transform:scale(1.08);box-shadow:0 7px 28px rgba(200,99,122,.48)}
+.sfab.shifted{right:calc(var(--sw) + 26px)}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:38px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:rgba(50,30,40,.88);color:#fff;font-size:13px;
+  padding:9px 22px;border-radius:2px;letter-spacing:.8px;
+  opacity:0;transition:all .28s;pointer-events:none;z-index:400;white-space:nowrap;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<!-- ══════════ LOGIN PAGE ══════════ -->
+<div id="login-page">
+  <div class="lcard">
+    <div class="deco"><div class="dline l"></div><span class="dheart">♥</span><div class="dline r"></div></div>
+    <div class="ltitle">Our Secret Garden</div>
+    <div class="lsub">进入我们的世界</div>
+    <div class="lfield">
+      <label>账号</label>
+      <input id="lu" type="text" placeholder="输入你的名字…" autocomplete="username">
+    </div>
+    <div class="lfield">
+      <label>密码</label>
+      <input id="lp" type="password" placeholder="秘密的暗号…" autocomplete="current-password">
+    </div>
+    <div class="lerr" id="lerr"></div>
+    <button class="lbtn" onclick="doLogin()">ENTER &nbsp;✦</button>
+    <p class="lhint">账号 名字缩写 &nbsp;·&nbsp; 密码 第一天日期</p>
+  </div>
+</div>
+
+<!-- ══════════ MAIN PAGE ══════════ -->
+<div id="main-page">
+
+  <nav class="topnav">
+    <div class="nbrand">♥ Our Story</div>
+    <div class="nright">
+      <div class="ndot" id="ndot"></div>
+      <span class="nuser" id="nuser"></span>
+      <a class="nout" href="#" onclick="doLogout();return false">退出</a>
+    </div>
+  </nav>
+
+  <div class="layout" id="layout">
+    <main class="main">
+
+      <!-- 名字 -->
+      <section class="names-sec">
+        <div class="sec-head"><div class="sec-line"></div><span class="sec-lbl">Our Names</span></div>
+        <div class="names-row">
+          <input class="nf" id="name1" type="text" placeholder="你的名字" maxlength="12">
+          <span class="nsep">&amp;</span>
+          <input class="nf" id="name2" type="text" placeholder="TA 的名字" maxlength="12">
+        </div>
+        <p class="nhint">在这里写下你们的名字</p>
+      </section>
+
+      <!-- 故事 -->
+      <section class="story-sec">
+        <div class="sec-head"><div class="sec-line"></div><span class="sec-lbl">Our Story</span></div>
+        <textarea class="sta" id="story" rows="7" placeholder="写下你们的故事，那些珍贵的瞬间……&#10;&#10;记录每一个难忘的时刻，每一次相遇，每一份感动。"></textarea>
+      </section>
+
+      <!-- 照片 -->
+      <section class="photo-sec">
+        <div class="sec-head"><div class="sec-line"></div><span class="sec-lbl">Our Photos</span></div>
+        <div class="pgrid" id="pgrid">
+          <label class="pupbtn" for="finput">
+            <div class="pupicon">📷</div>
+            <div class="puptxt">上传照片</div>
+          </label>
+        </div>
+        <input type="file" id="finput" accept="image/*" multiple>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-inner">
+      <div class="sbtitle">✦ 我们的收藏</div>
+
+      <div class="cathead">🍜 喜欢的食物</div>
+      <div class="tagrow" id="tfoods"></div>
+      <div class="sdiv"></div>
+
+      <div class="cathead">🗺 喜欢的地方</div>
+      <div class="tagrow" id="tplaces"></div>
+      <div class="sdiv"></div>
+
+      <div class="cathead">📸 最喜欢的合照</div>
+      <div class="sb-pgrid" id="sbphotos">
+        <p class="sb-empty" id="sbhint">上传照片后可在这里标记 ♥</p>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sbtog" id="sbtog">
+    <button class="togbtn" onclick="toggleSB()" aria-label="切换侧边栏">
+      <div class="togdot"></div><div class="togdot"></div><div class="togdot"></div>
+    </button>
+  </div>
+
+  <button class="sfab" id="sfab" onclick="saveAll()" title="保存">💾</button>
+</div>
+
+<!-- ── Lightbox ── -->
+<div class="lbox" id="lbox" onclick="closeLB()">
+  <button class="lbx-close" onclick="closeLB()">✕</button>
+  <img id="lbimg" src="" alt="">
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════
+   CONFIG — 修改账号密码在这里
+════════════════════════════════════════ */
+const ACCOUNTS = { 'lyldgq':'20250204', 'admin':'password' };
+
+/* ════════════════════════════════════════
+   TAG DATA
+════════════════════════════════════════ */
+const FOODS = ['火锅','寿司','拉面','烤肉','甜品','奶茶','披萨','炸鸡','汤圆','芒果','草莓','烤串','刺身','提拉米苏','芝士蛋糕','冰淇淋','章鱼小丸子','红豆汤'];
+const PLACES = ['海边','咖啡馆','图书馆','森林','夜市','游乐园','博物馆','老街','山顶','便利店','电影院','花园','星空下','书店','水族馆','古镇','小巷','公园'];
+
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+let sbOpen = false, dirty = false;
+let photos = [];      // {id, name, dataUrl}
+let selPhotos = new Set();
+let selFoods = new Set();
+let selPlaces = new Set();
+
+/* ════════════════════════════════════════
+   LOGIN
+════════════════════════════════════════ */
+function doLogin() {
+  const u = document.getElementById('lu').value.trim();
+  const p = document.getElementById('lp').value;
+  if (ACCOUNTS[u] && ACCOUNTS[u] === p) {
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('main-page').style.display = 'block';
+    document.getElementById('nuser').textContent = u;
+    loadData();
+    startCanvas();
+  } else {
+    document.getElementById('lerr').textContent = '账号或密码错误，请重试';
+    document.getElementById('lp').value = '';
+  }
+}
+
+function doLogout() {
+  if (dirty && !confirm('有未保存的内容，确定退出？')) return;
+  document.getElementById('main-page').style.display = 'none';
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('lu').value = '';
+  document.getElementById('lp').value = '';
+  document.getElementById('lerr').textContent = '';
+}
+
+document.getElementById('lu').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('lp').focus(); });
+document.getElementById('lp').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+/* ════════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════════ */
+function toggleSB() {
+  sbOpen = !sbOpen;
+  document.getElementById('sidebar').classList.toggle('on', sbOpen);
+  document.getElementById('layout').classList.toggle('sb-open', sbOpen);
+  document.getElementById('sbtog').classList.toggle('shifted', sbOpen);
+  document.getElementById('sfab').classList.toggle('shifted', sbOpen);
+}
+
+/* ════════════════════════════════════════
+   TAGS
+════════════════════════════════════════ */
+function buildTags() {
+  buildTagGroup('tfoods', FOODS, selFoods, 'foods');
+  buildTagGroup('tplaces', PLACES, selPlaces, 'places');
+}
+
+function buildTagGroup(containerId, list, selSet, group) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  list.forEach(v => {
+    const t = document.createElement('span');
+    t.className = 'tag' + (selSet.has(v) ? ' sel' : '');
+    t.textContent = v;
+    t.dataset.val = v;
+    t.onclick = () => {
+      if (selSet.has(v)) { selSet.delete(v); t.classList.remove('sel'); }
+      else { selSet.add(v); t.classList.add('sel'); }
+      markDirty();
+    };
+    c.appendChild(t);
+  });
+}
+
+/* ════════════════════════════════════════
+   PHOTOS
+════════════════════════════════════════ */
+function renderPhotos() {
+  const grid = document.getElementById('pgrid');
+  const upBtn = grid.querySelector('.pupbtn');
+  grid.innerHTML = '';
+  grid.appendChild(upBtn);
+
+  photos.forEach(ph => {
+    const card = document.createElement('div');
+    card.className = 'pcard';
+    card.innerHTML = `<img src="${ph.dataUrl}" alt="" onclick="openLB('${ph.id}')">
+      <button class="pdel" onclick="delPhoto(event,'${ph.id}')">✕</button>`;
+    grid.insertBefore(card, upBtn);
+  });
+
+  renderSBPhotos();
+}
+
+function renderSBPhotos() {
+  const c = document.getElementById('sbphotos');
+  const hint = document.getElementById('sbhint');
+
+  if (photos.length === 0) {
+    c.innerHTML = '';
+    c.appendChild(hint);
+    return;
+  }
+  if (hint.parentNode === c) c.removeChild(hint);
+
+  const existing = new Set([...c.querySelectorAll('[data-pid]')].map(el => el.dataset.pid));
+  photos.forEach(ph => {
+    if (existing.has(ph.id)) return;
+    const div = document.createElement('div');
+    div.className = 'sb-ph' + (selPhotos.has(ph.id) ? ' sel' : '');
+    div.dataset.pid = ph.id;
+    div.innerHTML = `<img src="${ph.dataUrl}" alt="">`;
+    div.onclick = () => {
+      div.classList.toggle('sel');
+      if (div.classList.contains('sel')) selPhotos.add(ph.id);
+      else selPhotos.delete(ph.id);
+      markDirty();
+    };
+    c.appendChild(div);
+  });
+  // Remove stale
+  c.querySelectorAll('[data-pid]').forEach(el => {
+    if (!photos.find(p => p.id === el.dataset.pid)) el.remove();
+  });
+}
+
+document.getElementById('finput').addEventListener('change', function() {
+  const files = [...this.files];
+  let loaded = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      photos.push({ id: 'p' + Date.now() + Math.random().toString(36).slice(2), name: file.name, dataUrl: e.target.result });
+      loaded++;
+      if (loaded === files.length) { renderPhotos(); markDirty(); showToast('照片添加成功 ♥'); }
+    };
+    reader.readAsDataURL(file);
+  });
+  this.value = '';
+});
+
+function delPhoto(e, id) {
+  e.stopPropagation();
+  if (!confirm('确定删除这张照片吗？')) return;
+  photos = photos.filter(p => p.id !== id);
+  selPhotos.delete(id);
+  const sbEl = document.querySelector(`[data-pid="${id}"]`);
+  if (sbEl) sbEl.remove();
+  renderPhotos();
+  markDirty();
+  showToast('已删除');
+}
+
+/* ════════════════════════════════════════
+   LIGHTBOX
+════════════════════════════════════════ */
+function openLB(id) {
+  const ph = photos.find(p => p.id === id);
+  if (!ph) return;
+  document.getElementById('lbimg').src = ph.dataUrl;
+  document.getElementById('lbox').classList.add('on');
+}
+function closeLB() {
+  document.getElementById('lbox').classList.remove('on');
+  document.getElementById('lbimg').src = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+
+/* ════════════════════════════════════════
+   SAVE / LOAD (localStorage)
+════════════════════════════════════════ */
+function markDirty() {
+  dirty = true;
+  document.getElementById('ndot').classList.add('on');
+}
+
+['name1','name2','story'].forEach(id => document.getElementById(id).addEventListener('input', markDirty));
+
+function saveAll(silent) {
+  const data = {
+    name1: document.getElementById('name1').value,
+    name2: document.getElementById('name2').value,
+    story: document.getElementById('story').value,
+    foods: [...selFoods],
+    places: [...selPlaces],
+    selPhotos: [...selPhotos],
+    photos: photos
+  };
+  try {
+    localStorage.setItem('ours_data', JSON.stringify(data));
+    dirty = false;
+    document.getElementById('ndot').classList.remove('on');
+    if (!silent) showToast('已保存 ✓');
+  } catch(e) {
+    showToast('保存失败（照片可能过大）');
+  }
+}
+
+function loadData() {
+  const raw = localStorage.getItem('ours_data');
+  if (!raw) { buildTags(); return; }
+  try {
+    const d = JSON.parse(raw);
+    document.getElementById('name1').value = d.name1 || '';
+    document.getElementById('name2').value = d.name2 || '';
+    document.getElementById('story').value = d.story || '';
+    selFoods  = new Set(d.foods   || []);
+    selPlaces = new Set(d.places  || []);
+    selPhotos = new Set(d.selPhotos || []);
+    photos    = d.photos || [];
+  } catch { }
+  buildTags();
+  renderPhotos();
+  setInterval(() => { if (dirty) saveAll(true); }, 30000);
+}
+
+/* ════════════════════════════════════════
+   TOAST
+════════════════════════════════════════ */
+let _tt;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(_tt);
+  _tt = setTimeout(() => el.classList.remove('on'), 2400);
+}
+
+/* ════════════════════════════════════════
+   CANVAS — floating hearts & petals
+════════════════════════════════════════ */
+function startCanvas() {
+  const cv = document.getElementById('c');
+  const ctx = cv.getContext('2d');
+  function resize() { cv.width = innerWidth; cv.height = innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const particles = Array.from({length:40}, () => mkP());
+  function mkP(y) {
+    const type = Math.random() < .4 ? 'heart' : 'petal';
+    return {
+      type, x: Math.random()*innerWidth,
+      y: y !== undefined ? y : Math.random()*innerHeight,
+      sz: Math.random()*9 + (type==='heart'?4:5),
+      speed: Math.random()*.45 + .13,
+      drift: (Math.random()-.5)*.35,
+      wobble: Math.random()*Math.PI*2,
+      op: Math.random()*.2 + .06,
+      rot: Math.random()*Math.PI*2,
+      rs: (Math.random()-.5)*.04,
+      hue: Math.random()*25
+    };
+  }
+
+  function drawHeart(x, y, s, op) {
+    ctx.save(); ctx.globalAlpha = op; ctx.fillStyle = '#c8637a';
+    ctx.beginPath(); ctx.moveTo(x,y);
+    ctx.bezierCurveTo(x,y-s*.3,x-s*.5,y-s*.6,x-s*.5,y-s*.25);
+    ctx.bezierCurveTo(x-s*.5,y-s*.9,x,y-s*.8,x,y-s*.5);
+    ctx.bezierCurveTo(x,y-s*.8,x+s*.5,y-s*.9,x+s*.5,y-s*.25);
+    ctx.bezierCurveTo(x+s*.5,y-s*.6,x,y-s*.3,x,y);
+    ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+
+  function drawPetal(x, y, s, rot, op, hue) {
+    ctx.save(); ctx.globalAlpha = op;
+    ctx.translate(x, y); ctx.rotate(rot);
+    ctx.beginPath(); ctx.ellipse(0,0,s*.42,s,0,0,Math.PI*2);
+    ctx.fillStyle = `hsl(${348+hue},55%,${80+hue*.4}%)`;
+    ctx.fill(); ctx.restore();
+  }
+
+  (function loop() {
+    ctx.clearRect(0,0,cv.width,cv.height);
+    particles.forEach(p => {
+      p.y -= p.speed; p.wobble += .018;
+      p.x += Math.sin(p.wobble)*p.drift;
+      p.rot += p.rs;
+      if (p.y < -25) Object.assign(p, mkP(cv.height+25));
+      if (p.type === 'heart') drawHeart(p.x, p.y, p.sz, p.op);
+      else drawPetal(p.x, p.y, p.sz, p.rot, p.op, p.hue);
+    });
+    requestAnimationFrame(loop);
+  })();
+}
+
+/* Run canvas on login page too (before login) */
+(function loginCanvas(){
+  const cv = document.getElementById('c');
+  const ctx = cv.getContext('2d');
+  cv.width = innerWidth; cv.height = innerHeight;
+  window.addEventListener('resize', () => { cv.width=innerWidth; cv.height=innerHeight; });
+  const ps = Array.from({length:32}, () => ({
+    x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+    sz:Math.random()*8+4, speed:Math.random()*.4+.1,
+    drift:(Math.random()-.5)*.3, wobble:Math.random()*Math.PI*2,
+    op:Math.random()*.18+.05, rot:Math.random()*Math.PI*2, rs:(Math.random()-.5)*.04, hue:Math.random()*25
+  }));
+  function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p=>{
+      p.y-=p.speed; p.wobble+=.018; p.x+=Math.sin(p.wobble)*p.drift; p.rot+=p.rs;
+      if(p.y<-20){p.y=cv.height+20;p.x=Math.random()*cv.width;}
+      ctx.save(); ctx.globalAlpha=p.op; ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.beginPath(); ctx.ellipse(0,0,p.sz*.42,p.sz,0,0,Math.PI*2);
+      ctx.fillStyle=`hsl(${348+p.hue},55%,${80+p.hue*.4}%)`; ctx.fill(); ctx.restore();
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+</body>
+</html>
